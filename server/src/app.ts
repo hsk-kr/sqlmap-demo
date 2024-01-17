@@ -1,6 +1,6 @@
 import express from 'express';
-import { initDatabase } from './config/db';
-import { loadEnv } from './config/env';
+import { initDatabase } from './configs/db';
+import { loadEnv } from './configs/env';
 import routes from './routes';
 
 loadEnv();

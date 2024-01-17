@@ -4,7 +4,12 @@ import {
   createUser,
   getUserByUsername,
 } from '../models/user.model';
-import { badRequest, errorResponse, serverErrorResponse } from './common';
+import {
+  badRequest,
+  errorResponse,
+  serverErrorResponse,
+} from '../libs/api-response-generator';
+import { generateToken } from '../libs/token';
 
 export const signUp = async (req: Request, res: Response) => {
   const { username, password } = req.body;
@@ -41,5 +46,7 @@ export const signIn = async (req: Request, res: Response) => {
     return errorResponse(res, 'incorrect password');
   }
 
-  return res.json({ result: 'ok' });
+  const accessToken = generateToken(user.id);
+
+  return res.json({ result: 'ok', accessToken });
 };

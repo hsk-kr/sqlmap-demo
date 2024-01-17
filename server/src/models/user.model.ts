@@ -1,6 +1,6 @@
 import crypto from 'crypto';
-import { getConnection } from '../config/db';
-import { loadEnv } from '../config/env';
+import { getConnection } from '../configs/db';
+import { loadEnv } from '../configs/env';
 
 loadEnv();
 

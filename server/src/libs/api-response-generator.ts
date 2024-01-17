@@ -6,6 +6,12 @@ export const badRequest = (res: Response) =>
 export const errorResponse = (res: Response, message: string) =>
   res.status(401).json({ result: 'error', message });
 
+export const authenticationErrorResponse = (
+  res: Response,
+  message = 'failed authentication'
+) =>
+  res.status(401).json({ result: 'error', message: 'Failed Authentication' });
+
 export const serverErrorResponse = (
   res: Response,
   message = 'something went wrong'
