@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from 'express';
 import { authenticationErrorResponse } from '../libs/api-response-generator';
 import { verifyToken } from '../libs/token';
 
-const authenticate = (req: Request, res: Response, next: NextFunction) => {
+const authenticate = (req: Request<any,any,any,any,{userId: number}>, res: Response, next: NextFunction) => {
   try {
     const token = req.headers.authorization?.split(' ')[1];
     if (!token) {
@@ -15,7 +15,7 @@ const authenticate = (req: Request, res: Response, next: NextFunction) => {
       throw new Error('failed to authenticate');
     }
 
-    req.userId = data.userId;
+    res.locals.userId = data.userId;
 
     next();
   } catch {

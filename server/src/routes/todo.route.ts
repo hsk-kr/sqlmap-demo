@@ -1,5 +1,8 @@
 import express from 'express';
+import authenticate from '../middlewares/auth.middleware';
 const router = express.Router();
+
+router.use(authenticate);
 
 router
   .route('/')
@@ -7,7 +10,7 @@ router
     res.send('create todo');
   })
   .get((req, res) => {
-    res.send('get todos ');
+    res.send('get todos ' + res.locals.userId); // printing locals variables test
   });
 
 router
