@@ -3,6 +3,8 @@ import { Response } from 'express';
 export const badRequest = (res: Response) =>
   res.status(401).send('bad request');
 
+export const notFound = (res: Response) => res.status(404).send('Not Found');
+
 export const errorResponse = (res: Response, message: string) =>
   res.status(401).json({ result: 'error', message });
 

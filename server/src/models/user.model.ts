@@ -45,7 +45,7 @@ export const createUser = async (username: string, plainPassword: string) => {
 
   return await getConnection<boolean>(async (conn) => {
     const queryRes = await conn.query(
-      `INSERT user(USERNAME, PASSWORD) VALUES(?, ?)`,
+      `INSERT user(username, password) VALUES(?, ?)`,
       [username, hashedPassword]
     );
 

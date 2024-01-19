@@ -1,6 +1,7 @@
 import mariadb, { Pool, PoolConnection } from 'mariadb';
 import { loadEnv } from './env';
 import { createUserTable } from '../models/user.model';
+import { createTodoTable } from '../models/todo.model';
 
 loadEnv();
 
@@ -51,4 +52,5 @@ export const getConnection = async <RT>(
 export const initDatabase = async () => {
   await initPool();
   createUserTable();
+  createTodoTable();
 };
