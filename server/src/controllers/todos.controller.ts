@@ -28,7 +28,7 @@ export const craeteTodo = async (req: Request, res: Response) => {
     return serverErrorResponse(res);
   }
 
-  return res.json({ result: 'ok' });
+  return res.status(201).json({ result: 'ok' });
 };
 
 export const getTodos = async (req: Request, res: Response) => {
@@ -67,9 +67,10 @@ export const updateTodo = async (req: Request, res: Response) => {
 
   if (!userId) {
     return authenticationErrorResponse(res);
-  } else if (Number.isNaN(todoId)) {
-    return badRequest(res);
-  } else if (content === undefined && done === undefined) {
+  } else if (
+    Number.isNaN(todoId) ||
+    (content === undefined && done === undefined)
+  ) {
     return badRequest(res);
   }
 

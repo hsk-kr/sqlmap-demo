@@ -27,7 +27,7 @@ export const signUp = async (req: Request, res: Response) => {
     return serverErrorResponse(res);
   }
 
-  return res.json({ result: 'ok' });
+  return res.status(201).json({ result: 'ok' });
 };
 
 export const signIn = async (req: Request, res: Response) => {
