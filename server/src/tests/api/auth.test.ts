@@ -14,7 +14,6 @@ describe('Sign Up', () => {
     test('should create a user', (done) => {
       request
         .post('/auth/sign-up')
-        .set('Content-Type', 'application/json')
         .send({
           username: 'test',
           password: 'test',
@@ -26,7 +25,6 @@ describe('Sign Up', () => {
   test('should have an existing username', async () => {
     const res = await request
       .post('/auth/sign-up')
-      .set('Content-Type', 'application/json')
       .send({
         username: 'test',
         password: 'test',
@@ -42,7 +40,6 @@ describe('Sign In', () => {
     if (!TEST_NO_CREATE_TEST_USERS) {
       request
         .post('/auth/sign-up')
-        .set('Content-Type', 'application/json')
         .send({
           username: 'signin',
           password: 'signin',
@@ -56,7 +53,6 @@ describe('Sign In', () => {
   test('should be sucessfully signed in', (done) => {
     request
       .post('/auth/sign-in')
-      .set('Content-Type', 'application/json')
       .send({
         username: 'signin',
         password: 'signin',
@@ -67,7 +63,6 @@ describe('Sign In', () => {
   test('should fail to sign in with wrong username', async () => {
     const res = await request
       .post('/auth/sign-in')
-      .set('Content-Type', 'application/json')
       .send({
         username: 'signin1',
         password: 'signin',
@@ -80,7 +75,6 @@ describe('Sign In', () => {
   test('should fail to sign in with wrong passwprd', async () => {
     const res = await request
       .post('/auth/sign-in')
-      .set('Content-Type', 'application/json')
       .send({
         username: 'signin',
         password: 'signin1',

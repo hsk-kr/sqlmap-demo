@@ -1,7 +1,7 @@
 import express from 'express';
 import authenticate from '../middlewares/auth.middleware';
 import {
-  craeteTodo,
+  createTodo,
   deleteTodo,
   getTodo,
   getTodos,
@@ -11,7 +11,7 @@ const router = express.Router();
 
 router.use(authenticate);
 
-router.route('/').post(craeteTodo).get(getTodos);
+router.route('/').post(createTodo).get(getTodos);
 
 router.route('/:todoId').patch(updateTodo).get(getTodo).delete(deleteTodo);
 

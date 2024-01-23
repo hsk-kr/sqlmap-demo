@@ -5,8 +5,8 @@ loadEnv();
 
 export interface Todo {
   id: number;
-  username: string;
-  password: string;
+  content: string;
+  done: number;
 }
 
 export const createTodoTable = () => {
@@ -23,18 +23,25 @@ export const createTodoTable = () => {
   });
 };
 
-export const getTodos = async (userId: number) => {
+export const getTodos = async (
+  userId: number,
+  offset: number,
+  limit: number
+) => {
   return await getConnection<Todo[]>(async (conn) => {
-    return await conn.query(`SELECT * FROM todo WHERE user_id = ?`, userId);
+    return await conn.query(
+      `SELECT id, content, done FROM todo WHERE user_id = ? ORDER BY id DESC LIMIT ? OFFSET ?`,
+      [userId, limit, offset]
+    );
   });
 };
 
 export const getTodo = async (userId: number, id: number) => {
   const todos = await getConnection<Todo[]>(async (conn) => {
-    return await conn.query(`SELECT * FROM todo WHERE user_id = ? and id = ?`, [
-      userId,
-      id,
-    ]);
+    return await conn.query(
+      `SELECT id, content, done FROM todo WHERE user_id = ? and id = ?`,
+      [userId, id]
+    );
   });
 
   return todos?.length === 1 ? todos[0] : undefined;
@@ -62,7 +69,10 @@ export const updateTodo = async (
     done?: boolean;
   }
 ) => {
-  return await getConnection<boolean>(async (conn) => {
+  return await getConnection<{
+    result: boolean;
+    data: Todo | undefined;
+  }>(async (conn) => {
     const setFields = Object.entries({ content, done }).filter(
       ([_, value]) => value !== undefined
     );
@@ -71,24 +81,37 @@ export const updateTodo = async (
 
     set = setFields.map(([key]) => `${key} = ?`).join(',');
 
-    if (set === '') return false;
+    if (set === '')
+      return {
+        result: false,
+        data: undefined,
+      };
 
     const queryRes = await conn.query(
       `UPDATE todo SET ${set} WHERE user_id = ? and id = ?`,
       [...values, userId, id]
     );
 
-    return queryRes.affectedRows === 1;
+    return {
+      result: queryRes.affectedRows === 1,
+      data: await getTodo(userId, id),
+    };
   });
 };
 
 export const createTodo = async (userId: number, content: string) => {
-  return await getConnection<boolean>(async (conn) => {
+  return await getConnection<{
+    result: boolean;
+    data: Todo | undefined;
+  }>(async (conn) => {
     const queryRes = await conn.query(
       `INSERT todo(user_id, content) VALUES(?, ?)`,
       [userId, content]
     );
 
-    return queryRes.affectedRows === 1;
+    return {
+      result: queryRes.affectedRows === 1,
+      data: await getTodo(userId, queryRes.insertId),
+    };
   });
 };

@@ -13,7 +13,7 @@ import {
   getTodos as getTodosModel,
 } from '../models/todo.model';
 
-export const craeteTodo = async (req: Request, res: Response) => {
+export const createTodo = async (req: Request, res: Response) => {
   const { userId } = res.locals;
   const { content } = req.body;
 
@@ -24,21 +24,29 @@ export const craeteTodo = async (req: Request, res: Response) => {
     return badRequest(res);
   }
 
-  if (!(await createTodoModel(userId, content))) {
+  const { result, data } = await createTodoModel(userId, content);
+
+  if (!result || !data) {
     return serverErrorResponse(res);
   }
 
-  return res.status(201).json({ result: 'ok' });
+  return res.status(201).json({ result: 'ok', data });
 };
 
 export const getTodos = async (req: Request, res: Response) => {
   const { userId } = res.locals;
 
+  const { page = '1', limit = '10' } = req.query;
+
+  const nPage = Number.isNaN(Number(page)) ? 1 : Number(page);
+  const nLimit = Number.isNaN(Number(limit)) ? 10 : Number(limit);
+  const offset = (nPage - 1) * nLimit;
+
   if (!userId) {
     return authenticationErrorResponse(res);
   }
 
-  const todos = await getTodosModel(userId);
+  const todos = await getTodosModel(userId, offset, nLimit);
   return res.json({ result: 'ok', data: todos });
 };
 
@@ -74,11 +82,15 @@ export const updateTodo = async (req: Request, res: Response) => {
     return badRequest(res);
   }
 
-  const success = updateTodoModel(userId, todoId, { content, done });
-  if (!success) {
+  const updateTodoRes = await updateTodoModel(userId, todoId, {
+    content,
+    done,
+  });
+
+  if (!updateTodoRes.result || !updateTodoRes.data) {
     return serverErrorResponse(res);
   }
-  return res.json({ result: 'ok' });
+  return res.json({ result: 'ok', data: updateTodoRes.data });
 };
 
 export const deleteTodo = async (req: Request, res: Response) => {
