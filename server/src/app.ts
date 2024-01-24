@@ -7,7 +7,7 @@ loadEnv();
 
 const app = express();
 const PORT = process.env.PORT ?? 3000;
-const TEST_URL = `http://localhost:${PORT}`;
+const TEST_URL = process.env.TEST_URL ?? `http://localhost:${PORT}`;
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));

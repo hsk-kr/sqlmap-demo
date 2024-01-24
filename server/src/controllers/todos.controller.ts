@@ -103,7 +103,7 @@ export const deleteTodo = async (req: Request, res: Response) => {
     return badRequest(res);
   }
 
-  deleteTodoModel(userId, todoId);
+  await deleteTodoModel(userId, todoId);
 
   return res.json({ result: 'ok' });
 };

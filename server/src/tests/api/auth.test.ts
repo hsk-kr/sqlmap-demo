@@ -72,7 +72,7 @@ describe('Sign In', () => {
     expect(res.body.message).toBe('user does not exist');
   });
 
-  test('should fail to sign in with wrong passwprd', async () => {
+  test('should fail to sign in with wrong password', async () => {
     const res = await request
       .post('/auth/sign-in')
       .send({

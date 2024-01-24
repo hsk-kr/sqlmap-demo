@@ -19,11 +19,12 @@ export const signUp = async (req: Request, res: Response) => {
   }
 
   const user = await getUserByUsername(username);
+
   if (user) {
     return errorResponse(res, 'username exists');
   }
 
-  if (!createUser(username, password)) {
+  if (!(await createUser(username, password))) {
     return serverErrorResponse(res);
   }
 

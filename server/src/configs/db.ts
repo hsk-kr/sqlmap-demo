@@ -13,6 +13,7 @@ const initPool = async () => {
     user: process.env.MARIADB_USER,
     password: process.env.MARIADB_PASSWORD,
     connectionLimit: Number(process.env.MARIADB_CONNECTION_LIMIT) ?? 0,
+    connectTimeout: Number(process.env.MARIADB_INIT_TIMEOUT) ?? 0,
   };
 
   const dbConn = await mariadb.createConnection(dbConnectionData);

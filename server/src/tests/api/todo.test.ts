@@ -1,6 +1,5 @@
 import supertest from 'supertest';
 import { TEST_URL } from '../../app';
-import TestAgent from 'supertest/lib/agent';
 
 const TEST_NO_CREATE_TEST_USERS =
   (process.env.TEST_NO_CREATE_TEST_USERS ?? '').toLowerCase() === 'true';
@@ -9,12 +8,15 @@ let commonHeader = {};
 
 describe('Todo', () => {
   beforeAll(async () => {
+    const username = 'todo';
+    const password = 'todo';
+
     if (!TEST_NO_CREATE_TEST_USERS) {
       await request
         .post('/auth/sign-up')
         .send({
-          username: 'test',
-          password: 'test',
+          username,
+          password,
         })
         .expect(201);
     }
@@ -22,8 +24,8 @@ describe('Todo', () => {
     const res = await request
       .post('/auth/sign-in')
       .send({
-        username: 'test',
-        password: 'test',
+        username,
+        password,
       })
       .expect(200);
 
