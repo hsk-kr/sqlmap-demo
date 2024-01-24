@@ -18,6 +18,7 @@ jobs:
         with:
           node-version: 18
       - name: Install dependencies
+        working-directory: ./server
         run: npm install
         shell: bash
       - name: Run test files
