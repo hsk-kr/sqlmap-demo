@@ -27,7 +27,7 @@ describe('Todo', () => {
         username,
         password,
       })
-      .expect(201);
+      .expect(200);
 
     commonHeader = {
       Authorization: `Bearer ${res.body.accessToken}`,
