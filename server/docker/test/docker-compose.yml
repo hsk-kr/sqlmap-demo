@@ -3,15 +3,12 @@ version: '3.8'
 services:
   mariadb:
     image: mariadb:11.2
-    restart: unless-stopped
-    env_file: ../../.env.test
     networks:
       - custom-network
     environment:
       - MARIADB_ROOT_PASSWORD=admin
   backend:
     build: ../..
-    restart: unless-stopped
     env_file: ../../.env.test
     depends_on:
       - mariadb
