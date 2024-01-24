@@ -17,12 +17,8 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 18
-      - name: Install dependencies
-        working-directory: ./server
-        run: npm install
-        shell: bash
       - name: Run test files
         uses: isbang/compose-action@v1.5.1
         with:
           compose-file: './server/docker/test/docker-compose.yml'
-          down-flags: '--build --abort-on-container-exit'
+          up-flags: '--build --abort-on-container-exit'
