@@ -75,6 +75,4 @@ const runTestScriptIfServerIsReady = (url) => {
   }, 1000);
 };
 
-const url = process.env.TEST_URL ?? 'http://localhost:3000/';
-
-runTestScriptIfServerIsReady(url);
+runTestScriptIfServerIsReady(process.env.TEST_URL);
