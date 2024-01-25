@@ -1,9 +1,8 @@
 import supertest from 'supertest';
-import { TEST_URL } from '../../app';
 
 const TEST_NO_CREATE_TEST_USERS =
   (process.env.TEST_NO_CREATE_TEST_USERS ?? '').toLowerCase() === 'true';
-const request = supertest(TEST_URL);
+const request = supertest(process.env.TEST_URL ?? '');
 
 describe('Sign Up', () => {
   const user = {

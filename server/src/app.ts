@@ -7,7 +7,6 @@ loadEnv();
 
 const app = express();
 const PORT = process.env.PORT ?? 3000;
-const TEST_URL = process.env.TEST_URL ?? `http://localhost:${PORT}`;
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -28,6 +27,3 @@ if (process.env.NODE_ENV !== 'test') {
       console.error(err);
     });
 }
-
-export { app, TEST_URL };
-export default app;
