@@ -16,14 +16,12 @@ for (const [key, value] of Object.entries(routes)) {
   app.use(key, value);
 }
 
-if (process.env.NODE_ENV !== 'test') {
-  initDatabase()
-    .then(() => {
-      app.listen(PORT, () => {
-        console.log(`Server is listening on ${PORT}`);
-      });
-    })
-    .catch((err) => {
-      console.error(err);
+initDatabase()
+  .then(() => {
+    app.listen(PORT, () => {
+      console.log(`Server is listening on ${PORT}`);
     });
-}
+  })
+  .catch((err) => {
+    console.error(err);
+  });
