@@ -8,7 +8,7 @@ permissions:
   contents: read
 
 jobs:
-  test:
+  webserver-test:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
