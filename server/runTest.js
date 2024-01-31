@@ -1,24 +1,25 @@
 const { spawn } = require('child_process');
 
-const runTestScriptIfServerIsReady = (url) => {
-  const tm = setInterval(async () => {
-    try {
-      await fetch(url);
-      clearInterval(tm);
+const INTERVAL = 1000;
 
-      const test = spawn('npm', ['run', 'test']);
+const runTestScriptIfServerIsReady = async () => {
+  try {
+    await fetch(process.env.TEST_URL);
 
-      const printAndCheckAllTestPass = (data) => console.log(data);
+    const test = spawn('npm', ['run', 'test']);
 
-      test.stdout.setEncoding('utf8');
-      test.stdout.on('data', printAndCheckAllTestPass);
+    const printAndCheckAllTestPass = (data) => console.log(data);
 
-      test.stderr.setEncoding('utf8');
-      test.stderr.on('data', printAndCheckAllTestPass);
+    test.stdout.setEncoding('utf8');
+    test.stdout.on('data', printAndCheckAllTestPass);
 
-      test.on('exit', (code) => process.exit(code));
-    } catch {}
-  }, 1000);
+    test.stderr.setEncoding('utf8');
+    test.stderr.on('data', printAndCheckAllTestPass);
+
+    test.on('exit', (code) => process.exit(code));
+  } catch {
+    setTimeout(runTestScriptIfServerIsReady, INTERVAL);
+  }
 };
 
-runTestScriptIfServerIsReady(process.env.TEST_URL);
+setTimeout(runTestScriptIfServerIsReady, INTERVAL);
