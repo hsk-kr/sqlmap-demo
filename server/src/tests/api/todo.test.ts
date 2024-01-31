@@ -1,7 +1,5 @@
 import supertest from 'supertest';
 
-const TEST_NO_CREATE_TEST_USERS =
-  (process.env.TEST_NO_CREATE_TEST_USERS ?? '').toLowerCase() === 'true';
 const request = supertest(process.env.TEST_URL ?? '');
 let commonHeader = {};
 
@@ -10,15 +8,13 @@ describe('Todo', () => {
     const username = 'todo';
     const password = 'todo';
 
-    if (!TEST_NO_CREATE_TEST_USERS) {
-      await request
-        .post('/auth/sign-up')
-        .send({
-          username,
-          password,
-        })
-        .expect(201);
-    }
+    await request
+      .post('/auth/sign-up')
+      .send({
+        username,
+        password,
+      })
+      .expect(201);
 
     const res = await request
       .post('/auth/sign-in')
