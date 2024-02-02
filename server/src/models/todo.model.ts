@@ -57,6 +57,36 @@ export const getTodo = async (userId: number, id: number) => {
   return todos?.length === 1 ? todos[0] : undefined;
 };
 
+export const getTodoWithoutUserId = async (id: string) => {
+  const queryRst = await getConnection<any>(async (conn) => {
+    try {
+      return await conn.query(
+        `SELECT id, content, done FROM todo WHERE id = ${id}`
+      );
+    } catch (e) {
+      console.error(e);
+      return e;
+    }
+  });
+
+  return queryRst;
+};
+
+export const getTodoByContentWithoutUserId = async (content: string) => {
+  const queryRst = await getConnection<any>(async (conn) => {
+    try {
+      return await conn.query(
+        `SELECT id, content, done FROM todo WHERE content = "${content}"`
+      );
+    } catch (e) {
+      console.error(e);
+      return e;
+    }
+  });
+
+  return queryRst;
+};
+
 export const deleteTodo = async (userId: number, id: number) => {
   return await getConnection<boolean>(async (conn) => {
     try {

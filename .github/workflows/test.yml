@@ -13,12 +13,18 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      - name: Set up Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20
       - name: Run test files
         uses: isbang/compose-action@v1.5.1
         with:
           compose-file: './server/docker/test/docker-compose.yml'
+          up-flags: '--build --abort-on-container-exit'
+  sqlinjection-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Run test files
+        uses: isbang/compose-action@v1.5.1
+        with:
+          compose-file: './sqlmap/docker-compose.yml'
           up-flags: '--build --abort-on-container-exit'
