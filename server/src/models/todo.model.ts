@@ -29,19 +29,29 @@ export const getTodos = async (
   limit: number
 ) => {
   return await getConnection<Todo[]>(async (conn) => {
-    return await conn.query(
-      `SELECT id, content, done FROM todo WHERE user_id = ? ORDER BY id DESC LIMIT ? OFFSET ?`,
-      [userId, limit, offset]
-    );
+    try {
+      return await conn.query(
+        `SELECT id, content, done FROM todo WHERE user_id = ? ORDER BY id DESC LIMIT ? OFFSET ?`,
+        [userId, limit, offset]
+      );
+    } catch (e) {
+      console.error(e);
+      return [];
+    }
   });
 };
 
 export const getTodo = async (userId: number, id: number) => {
   const todos = await getConnection<Todo[]>(async (conn) => {
-    return await conn.query(
-      `SELECT id, content, done FROM todo WHERE user_id = ? and id = ?`,
-      [userId, id]
-    );
+    try {
+      return await conn.query(
+        `SELECT id, content, done FROM todo WHERE user_id = ? and id = ?`,
+        [userId, id]
+      );
+    } catch (e) {
+      console.error(e);
+      return [];
+    }
   });
 
   return todos?.length === 1 ? todos[0] : undefined;
@@ -49,12 +59,17 @@ export const getTodo = async (userId: number, id: number) => {
 
 export const deleteTodo = async (userId: number, id: number) => {
   return await getConnection<boolean>(async (conn) => {
-    const queryRes = await conn.query(
-      `DELETE FROM todo WHERE user_id = ? and id = ?`,
-      [userId, id]
-    );
+    try {
+      const queryRes = await conn.query(
+        `DELETE FROM todo WHERE user_id = ? and id = ?`,
+        [userId, id]
+      );
 
-    return queryRes.affectedRows === 1;
+      return queryRes.affectedRows === 1;
+    } catch (e) {
+      console.error(e);
+      return false;
+    }
   });
 };
 
@@ -73,29 +88,37 @@ export const updateTodo = async (
     result: boolean;
     data: Todo | undefined;
   }>(async (conn) => {
-    const setFields = Object.entries({ content, done }).filter(
-      ([_, value]) => value !== undefined
-    );
-    let set = '';
-    let values = setFields.map(([_, value]) => value);
+    try {
+      const setFields = Object.entries({ content, done }).filter(
+        ([_, value]) => value !== undefined
+      );
+      let set = '';
+      let values = setFields.map(([_, value]) => value);
 
-    set = setFields.map(([key]) => `${key} = ?`).join(',');
+      set = setFields.map(([key]) => `${key} = ?`).join(',');
 
-    if (set === '')
+      if (set === '')
+        return {
+          result: false,
+          data: undefined,
+        };
+
+      const queryRes = await conn.query(
+        `UPDATE todo SET ${set} WHERE user_id = ? and id = ?`,
+        [...values, userId, id]
+      );
+
+      return {
+        result: queryRes.affectedRows === 1,
+        data: await getTodo(userId, id),
+      };
+    } catch (e) {
+      console.error(e);
       return {
         result: false,
         data: undefined,
       };
-
-    const queryRes = await conn.query(
-      `UPDATE todo SET ${set} WHERE user_id = ? and id = ?`,
-      [...values, userId, id]
-    );
-
-    return {
-      result: queryRes.affectedRows === 1,
-      data: await getTodo(userId, id),
-    };
+    }
   });
 };
 
@@ -104,14 +127,22 @@ export const createTodo = async (userId: number, content: string) => {
     result: boolean;
     data: Todo | undefined;
   }>(async (conn) => {
-    const queryRes = await conn.query(
-      `INSERT todo(user_id, content) VALUES(?, ?)`,
-      [userId, content]
-    );
+    try {
+      const queryRes = await conn.query(
+        `INSERT todo(user_id, content) VALUES(?, ?)`,
+        [userId, content]
+      );
 
-    return {
-      result: queryRes.affectedRows === 1,
-      data: await getTodo(userId, queryRes.insertId),
-    };
+      return {
+        result: queryRes.affectedRows === 1,
+        data: await getTodo(userId, queryRes.insertId),
+      };
+    } catch (e) {
+      console.error(e);
+      return {
+        result: false,
+        data: undefined,
+      };
+    }
   });
 };
