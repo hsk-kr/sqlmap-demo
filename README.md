@@ -261,6 +261,10 @@ There are three services.
 
 - test: It needs the API server to test, it depends on the `backend` service. As I already mentioned, it doesn't mean that it waits until the web server is ready. So, I wrote a script to execute the test code when the server is available.
 
+The services interact with each other using their names. For instance, the `backend` container accesses the database via `db:3306`.
+
+> [By default, any service can reach any other service at that service's name.](https://docs.docker.com/compose/networking/#link-containers)
+
 ## runTest.js
 
 ```javascript
