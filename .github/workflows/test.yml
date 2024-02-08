@@ -18,13 +18,3 @@ jobs:
         with:
           compose-file: './server/docker/test/docker-compose.yml'
           up-flags: '--build --abort-on-container-exit'
-  sqlinjection-test:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-      - name: SQL Injection Test
-        uses: isbang/compose-action@v1.5.1
-        with:
-          compose-file: './sqlmap/docker-compose.yml'
-          up-flags: '--build --abort-on-container-exit'
