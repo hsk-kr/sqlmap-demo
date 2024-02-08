@@ -3,8 +3,6 @@ version: '3.8'
 services:
   mariadb:
     image: mariadb:11.2
-    networks:
-      - custom-network
     environment:
       - MARIADB_ROOT_PASSWORD=admin
   backend:
@@ -12,17 +10,9 @@ services:
     env_file: ../../.env.test
     depends_on:
       - mariadb
-    networks:
-      - custom-network
   test:
     build: ../..
     env_file: ../../.env.test
-    networks:
-      - custom-network
     depends_on:
       - backend
     command: ['node', 'runTest.js']
-
-networks:
-  custom-network:
-    name: custom-network

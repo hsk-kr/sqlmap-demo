@@ -3,8 +3,6 @@ version: '3.8'
 services:
   mariadb:
     image: mariadb:11.2
-    networks:
-      - custom-network
     environment:
       - MARIADB_ROOT_PASSWORD=admin
   backend:
@@ -12,17 +10,9 @@ services:
     env_file: ../server/.env.test
     depends_on:
       - mariadb
-    networks:
-      - custom-network
   sql-injection:
     build: .
     depends_on:
       - backend
-    networks:
-      - custom-network
     environment:
       - TEST_URL=http://backend:3000
-
-networks:
-  custom-network:
-    name: custom-network
